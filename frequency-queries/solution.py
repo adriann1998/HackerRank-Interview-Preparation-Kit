@@ -5,12 +5,14 @@ import os
 import random
 import re
 import sys
+from collections import Counter
 
 # Complete the freqQuery function below.
 def freqQuery(queries):
     
     # create an occ map
-    db = {}
+    db = Counter()
+    count = Counter()
     ans = []
     
     # start executing every queries in the queries array
@@ -20,14 +22,19 @@ def freqQuery(queries):
         elem = query[1]
         # execute the instruction
         if ins == 1:
-            db[elem] = db.get(elem, 0) + 1
+            count[db[elem]] -= 1
+            db[elem] += 1
+            count[db[elem]] += 1
         elif ins == 2:
-            if db.get(elem, 0) != 0:
-                db[elem] = db.get(elem, 0) - 1
+            if db[elem] > 0:
+                count[db[elem]] -= 1
+                db[elem] -= 1
+                count[db[elem]] += 1
         elif ins == 3:
-            if elem in db.values(): 
+            if count[elem] > 0: 
                 ans.append(1)
-            else: ans.append(0)
+            else: 
+                ans.append(0)
         else:
             raise Exception('Instruction not recognized')
     
